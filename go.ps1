@@ -43,14 +43,18 @@ function Get-GoTargetFromFile($targetName, $fileName) {
 }
 
 function Get-GoTarget($targetName) {
+	$found = $FALSE
 	Get-AllGoTargetDescriptors | foreach -process {
 		$target = Get-GoTargetFromFile $targetName $_
 		if ($target) {
-			if ([System.IO.Path]::IsPathRooted($target)) {
-				return $target
-			}
-			else {
-				return Join-Path (Split-Path -parent $_) $target
+			if (-not $found) {
+				$found = $TRUE
+				if ([System.IO.Path]::IsPathRooted($target)) {
+					return $target
+				}
+				else {
+					return Join-Path (Split-Path -parent $_) $target
+				}
 			}
 		}
 	}
