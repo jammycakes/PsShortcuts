@@ -49,8 +49,8 @@ function Get-GoTarget($targetName) {
 		if ($target) {
 			if (-not $found) {
 				$found = $TRUE
-				if ([System.IO.Path]::IsPathRooted($target)) {
-					return $target
+				if ([System.IO.Path]::IsPathRooted($target) -or $target.StartsWith('http://') -or $target.StartsWith('https://')) {
+				    return $target
 				}
 				else {
 					return Join-Path (Split-Path -parent $_) $target
@@ -63,7 +63,12 @@ function Get-GoTarget($targetName) {
 function Goto-Target($targetName) {
 	$target = Get-GoTarget($targetName)
 	if ($target) {
-		Set-Location $target
+		if ($target.StartsWith('http://') -or $target.StartsWith('https://')) {
+			Start-Process $target
+		}
+		else {
+			Set-Location $target
+		}
 	}
 }
 
