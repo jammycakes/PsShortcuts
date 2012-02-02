@@ -67,6 +67,13 @@ function Goto-Target($targetName) {
 	}
 }
 
+# ====== Commands ====== #
+
 function go ($target) {
 	Goto-Target $target
+}
+
+function home {
+	$target = Convert-Path(Get-Location -PSProvider FileSystem)
+	. explorer "/e,$target"
 }
