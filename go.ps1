@@ -40,7 +40,6 @@ function Get-LocalGoTargetDescriptor {
 function Get-InstalledGoTargetDescriptor {
 	$thisdir = Split-Path -Parent $MyInvocation.ScriptName
 	return Join-Path $thisdir '.go'
-	return 'c:\abc\projects\cmdtools'
 }
 
 function Get-GoTargetFromFile($targetName, $fileName) {
