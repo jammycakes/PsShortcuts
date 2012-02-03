@@ -10,11 +10,15 @@ function Get-AllGoTargetDescriptors {
 	}
 	$local = Get-UserGoTargetDescriptor
 	$system = Get-SystemGoTargetDescriptor
+	$installed = Get-InstalledGoTargetDescriptor
 	if (Test-Path $local -PathType Leaf) {
 		$dirs += @($local)
 	}
 	if (Test-Path $system -PathType Leaf) {
 		$dirs += @($system)
+	}
+	if (Test-Path $installed -PathType Leaf) {
+		$dirs += @($installed)
 	}
 	return $dirs
 }
@@ -31,6 +35,12 @@ function Get-SystemGoTargetDescriptor {
 function Get-LocalGoTargetDescriptor {
 	$thisdir = Get-Location
 	return Join-Path $thisdir '.go'
+}
+
+function Get-InstalledGoTargetDescriptor {
+	$thisdir = Split-Path -Parent $MyInvocation.ScriptName
+	return Join-Path $thisdir '.go'
+	return 'c:\abc\projects\cmdtools'
 }
 
 function Get-GoTargetFromFile($targetName, $fileName) {

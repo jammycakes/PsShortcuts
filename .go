@@ -1,0 +1,9 @@
+facebook=https://facebook.com/
+github=https://github.com/
+gmail=https://mail.gooogle.com/
+google=https://google.com/
+msdn=http://www.msdn.com/
+stackoverflow=http://stackoverflow.com/
+twitter=https://twitter.com/
+home=~
+~=~
