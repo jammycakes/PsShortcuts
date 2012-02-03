@@ -88,7 +88,7 @@ function go ($target) {
 	Goto-Target $target
 }
 
-function home {
+function here {
 	$target = Convert-Path(Get-Location -PSProvider FileSystem)
 	. explorer "/e,$target"
 }
