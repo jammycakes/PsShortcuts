@@ -89,5 +89,5 @@ function go ($target) {
 
 function here {
 	$target = Convert-Path(Get-Location -PSProvider FileSystem)
-	. explorer "/e,$target"
+	Start-Process explorer "/e,$target"
 }
