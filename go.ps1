@@ -51,6 +51,8 @@ function Get-GoTargetFromFile($targetName, $fileName) {
 	}
 }
 
+
+
 function Get-GoTarget($targetName) {
 	$found = $FALSE
 	Get-AllGoTargetDescriptors | foreach -process {
@@ -63,6 +65,23 @@ function Get-GoTarget($targetName) {
 				}
 				else {
 					return Join-Path (Split-Path -parent $_) $target
+				}
+			}
+		}
+	}
+}
+
+function List-GoTargets {
+	Get-AllGoTargetDescriptors | foreach -process {
+		Get-Content $_ | foreach {
+			$bits = $_ -split '=',2
+			if ($bits.length -eq 2) {
+				if ($bits[0].length -gt 15) {
+					Write-Output $bits[0]
+					Write-Output ('                ' + $bits[1])
+				}
+				else {
+					Write-Output ($bits[0]+(New-Object String ' ',(16-$bits[0].Length)) + $bits[1])
 				}
 			}
 		}
@@ -83,8 +102,13 @@ function Goto-Target($targetName) {
 
 # ====== Commands ====== #
 
-function go ($target) {
-	Goto-Target $target
+function go {
+	if ($args.Length -eq 0) {
+		List-GoTargets
+	}
+	else {
+		Goto-Target $args[0]
+	}
 }
 
 function here {
