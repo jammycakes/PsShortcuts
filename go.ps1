@@ -11,13 +11,13 @@ function Get-AllGoTargetDescriptors {
 	$local = Get-UserGoTargetDescriptor
 	$system = Get-SystemGoTargetDescriptor
 	$installed = Get-InstalledGoTargetDescriptor
-	if (Test-Path $local -PathType Leaf) {
+	if ((Test-Path $local -PathType Leaf) -and ($dirs -inotcontains @($local))) {
 		$dirs += @($local)
 	}
-	if (Test-Path $system -PathType Leaf) {
+	if ((Test-Path $system -PathType Leaf) -and ($dirs -inotcontains @($system))) {
 		$dirs += @($system)
 	}
-	if (Test-Path $installed -PathType Leaf) {
+	if ((Test-Path $installed -PathType Leaf) -and ($dirs -inotcontains @($installed))) {
 		$dirs += @($installed)
 	}
 	return $dirs
@@ -50,8 +50,6 @@ function Get-GoTargetFromFile($targetName, $fileName) {
 		}
 	}
 }
-
-
 
 function Get-GoTarget($targetName) {
 	$found = $FALSE
