@@ -32,11 +32,6 @@ function Get-SystemGoTargetDescriptor {
 	return join-path $common '.go'
 }
 
-function Get-LocalGoTargetDescriptor {
-	$thisdir = Get-Location
-	return Join-Path $thisdir '.go'
-}
-
 function Get-InstalledGoTargetDescriptor {
 	$thisdir = Split-Path -Parent $MyInvocation.ScriptName
 	return Join-Path $thisdir '.go'
