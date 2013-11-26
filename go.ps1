@@ -37,30 +37,43 @@ function Get-InstalledGoTargetDescriptor {
 	return Join-Path $thisdir '.go'
 }
 
-function Get-GoTargetFromFile($targetName, $fileName) {
-	Get-Content $fileName | foreach {
-		$bits = $_ -split '=',2
-		if (($bits.length -eq 2) -and ($bits[0] -eq $targetName)) {
-			return $bits[1]
-		}
-	}
-}
+function Get-AllGoTargets {
+	$targets = @{}
 
-function Get-GoTarget($targetName) {
-	$found = $FALSE
 	Get-AllGoTargetDescriptors | foreach -process {
-		$target = Get-GoTargetFromFile $targetName $_
-		if ($target) {
-			if (-not $found) {
-				$found = $TRUE
-				if ([System.IO.Path]::IsPathRooted($target) -or $target.StartsWith('http://') -or $target.StartsWith('https://') -or ($target -eq '~')) {
-					return $target
-				}
-				else {
-					return Join-Path (Split-Path -parent $_) $target
+		Get-Content $_ | foreach {
+			if (-not $_.StartsWith("#")) {
+				$bits = $_ -split '=',2
+				if ($bits.length -eq 2) {
+					$key = $bits[0].Trim().ToLower()
+					$val = $bits[1].Trim()
+					if (-not $targets.ContainsKey($key)) {
+						$targets[$bits[0].Trim().ToLower()] = $bits[1].Trim()
+					}
 				}
 			}
 		}
+	}
+	return $targets
+}
+
+
+function Goto-Target($targetName) {
+	$targets = Get-AllGoTargets
+	if ($targets.ContainsKey($targetName)) {
+		$target = $targets[$targetName]
+		if ($target.StartsWith('http://') -or $target.StartsWith('https://')) {
+			Start-Process $target
+		}
+		elseif ([System.IO.Path]::IsPathRooted($target) -or ($target -eq '~')) {
+			Set-Location $target
+		}
+		else {
+			Set-Location Join-Path (Split-Path -parent $_) $target
+		}
+	}
+	else {
+		Write-Output "This target has not been defined."
 	}
 }
 
@@ -77,18 +90,6 @@ function List-GoTargets {
 					Write-Output ($bits[0]+(New-Object String ' ',(16-$bits[0].Length)) + $bits[1])
 				}
 			}
-		}
-	}
-}
-
-function Goto-Target($targetName) {
-	$target = Get-GoTarget($targetName)
-	if ($target) {
-		if ($target.StartsWith('http://') -or $target.StartsWith('https://')) {
-			Start-Process $target
-		}
-		else {
-			Set-Location $target
 		}
 	}
 }
