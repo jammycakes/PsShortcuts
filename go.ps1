@@ -78,20 +78,8 @@ function Goto-Target($targetName) {
 }
 
 function List-GoTargets {
-	Get-AllGoTargetDescriptors | foreach -process {
-		Get-Content $_ | foreach {
-			$bits = $_ -split '=',2
-			if ($bits.length -eq 2) {
-				if ($bits[0].length -gt 15) {
-					Write-Output $bits[0]
-					Write-Output ('                ' + $bits[1])
-				}
-				else {
-					Write-Output ($bits[0]+(New-Object String ' ',(16-$bits[0].Length)) + $bits[1])
-				}
-			}
-		}
-	}
+	$targets = Get-AllGoTargets
+	$targets.GetEnumerator() | Sort-Object Name
 }
 
 # ====== Commands ====== #
