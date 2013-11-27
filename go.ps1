@@ -41,14 +41,18 @@ function Get-AllGoTargets {
 	$targets = @{}
 
 	Get-AllGoTargetDescriptors | foreach -process {
+		$dir = Split-Path -parent $_
 		Get-Content $_ | foreach {
 			if (-not $_.StartsWith("#")) {
 				$bits = $_ -split '=',2
 				if ($bits.length -eq 2) {
 					$key = $bits[0].Trim().ToLower()
 					$val = $bits[1].Trim()
+					if (($val -ne '~') -and (-not $val.StartsWith('http://')) -and (-not $val.StartsWith('https://')) -and (-not [System.IO.Path]::IsPathRooted($val))) {
+						$val = Join-Path $dir $val
+					}
 					if (-not $targets.ContainsKey($key)) {
-						$targets[$bits[0].Trim().ToLower()] = $bits[1].Trim()
+						$targets[$key] = $val
 					}
 				}
 			}
@@ -65,11 +69,8 @@ function Goto-Target($targetName) {
 		if ($target.StartsWith('http://') -or $target.StartsWith('https://')) {
 			Start-Process $target
 		}
-		elseif ([System.IO.Path]::IsPathRooted($target) -or ($target -eq '~')) {
-			Set-Location $target
-		}
 		else {
-			Set-Location Join-Path (Split-Path -parent $_) $target
+			Set-Location $target
 		}
 	}
 	else {
@@ -89,7 +90,7 @@ function go {
 		List-GoTargets
 	}
 	else {
-		Goto-Target $args[0]
+		$args | foreach -process { Goto-Target $_ }
 	}
 }
 
