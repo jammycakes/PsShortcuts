@@ -42,13 +42,14 @@ function Get-AllGoTargets {
 
 	Get-AllGoTargetDescriptors | foreach -process {
 		$dir = Split-Path -parent $_
+		$dir = [System.IO.Path]::GetFullPath($dir)
 		Get-Content $_ | foreach {
 			if (-not $_.StartsWith("#")) {
 				$bits = $_ -split '=',2
 				if ($bits.length -eq 2) {
 					$key = $bits[0].Trim().ToLower()
 					$val = $bits[1].Trim()
-					if ((-not $val -match "^~([/\\]|$)") -and (-not $val.StartsWith('http://')) -and (-not $val.StartsWith('https://')) -and (-not [System.IO.Path]::IsPathRooted($val))) {
+					if ((-not ($val -match "^~([/\\]|$)")) -and (-not ($val.StartsWith('http://'))) -and (-not ($val.StartsWith('https://'))) -and (-not [System.IO.Path]::IsPathRooted($val))) {
 						$val = Join-Path $dir $val
 					}
 					if (-not $targets.ContainsKey($key)) {
