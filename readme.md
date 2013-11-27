@@ -45,6 +45,11 @@ You can also define shortcuts to web pages:
 Any line beginning with a hash (#) character will be treated as a comment
 and ignored.
 
+PsShortcuts recognises the tilde (~) as referring to your home directory
+when it occurs at the start of a path:
+
+    docs=~/Documents
+
 For shortcuts that you want to apply only to a specific directory and its
 subdirectories, create a file called .go in that directory. The syntax is
 the same.

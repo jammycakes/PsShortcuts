@@ -48,7 +48,7 @@ function Get-AllGoTargets {
 				if ($bits.length -eq 2) {
 					$key = $bits[0].Trim().ToLower()
 					$val = $bits[1].Trim()
-					if (($val -ne '~') -and (-not $val.StartsWith('http://')) -and (-not $val.StartsWith('https://')) -and (-not [System.IO.Path]::IsPathRooted($val))) {
+					if ((-not $val -match "^~([/\\]|$)") -and (-not $val.StartsWith('http://')) -and (-not $val.StartsWith('https://')) -and (-not [System.IO.Path]::IsPathRooted($val))) {
 						$val = Join-Path $dir $val
 					}
 					if (-not $targets.ContainsKey($key)) {
