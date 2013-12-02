@@ -1,4 +1,5 @@
-function Get-AllGoTargetDescriptors {
+function Get-AllGoTargetDescriptorsForLocation($location) {
+	$thisdir = $location
 	$dirs = @()
 	$thisdir = Get-Location
 	while ($thisdir) {
@@ -23,6 +24,11 @@ function Get-AllGoTargetDescriptors {
 	return $dirs
 }
 
+function Get-AllGoTargetDescriptors {
+	$location = Get-Location
+	return Get-AllGoTargetDescriptorsForLocation $location
+}
+
 function Get-UserGoTargetDescriptor {
 	return join-path (resolve-path ~) '.go'
 }
@@ -37,10 +43,10 @@ function Get-InstalledGoTargetDescriptor {
 	return Join-Path $thisdir '.go'
 }
 
-function Get-AllGoTargets {
+function Get-AllGoTargetsForLocation($location) {
 	$targets = @{}
 
-	Get-AllGoTargetDescriptors | foreach -process {
+	Get-AllGoTargetDescriptorsForLocation($location) | foreach -process {
 		$dir = Split-Path -parent $_
 		$dir = [System.IO.Path]::GetFullPath($dir)
 		Get-Content $_ | foreach {
@@ -63,6 +69,11 @@ function Get-AllGoTargets {
 		}
 	}
 	return $targets
+}
+
+function Get-AllGoTargets {
+	$location = Get-Location
+	return Get-AllGoTargetsForLocation $location
 }
 
 function Goto-Target($targetName) {
