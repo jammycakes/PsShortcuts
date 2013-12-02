@@ -92,6 +92,19 @@ function Goto-Target($targetName) {
 	}
 }
 
+function Get-Target($targetName, $location) {
+	$targets = Get-AllGoTargetsForLocation $location
+	if ($targets.ContainsKey($targetName)) {
+		if ($target.StartsWith('http://') -or $target.StartsWith('https://')) {
+			return $False
+		}
+		else {
+			return $target
+		}
+	}
+	return $False
+}
+
 function List-GoTargets {
 	$targets = Get-AllGoTargets
 	$targets.GetEnumerator() | Sort-Object Name
