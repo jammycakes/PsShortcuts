@@ -11,5 +11,6 @@ Export-ModuleMember `
 	-Function @(
 		'TabExpansion',
 		'Get-UserGoTargetDescriptor',
-		'go'
+		'go',
+		'here'
 	)
