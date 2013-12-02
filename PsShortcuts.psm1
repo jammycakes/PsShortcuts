@@ -9,5 +9,6 @@ Pop-Location
 Export-ModuleMember `
 	-Function @(
 		'Get-UserGoTargetDescriptor',
-		'go'
+		'go',
+		'here'
 	)
