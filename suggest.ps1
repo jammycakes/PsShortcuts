@@ -5,8 +5,9 @@ if (Test-Path Function:\TabExpansion) {
 
 function getSuggestions($destinations, $lastWord) {
 	$location = Get-Location
-	$destinations | foreach -process {
-		$location = Get-Target $_ $location
+
+	for ($i = 1; $i -lt ($destinations.length - 1); $i++) {
+		$location = Get-Target ($destinations[$i]) $location
 		if ($location -eq $False) {
 			return
 		}
