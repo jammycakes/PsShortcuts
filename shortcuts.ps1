@@ -1,8 +1,7 @@
 function Get-AllGoTargetDescriptorsForLocation($location) {
 	$thisdir = $location
 	$dirs = @()
-	$thisdir = Get-Location
-	while ($thisdir) {
+	while ($thisdir -and ($thisdir -ne '')) {
 		$file = Join-Path $thisdir '.go'
 		if (Test-Path $file -PathType Leaf) {
 			$dirs += @($file)
@@ -95,6 +94,7 @@ function Goto-Target($targetName) {
 function Get-Target($targetName, $location) {
 	$targets = Get-AllGoTargetsForLocation $location
 	if ($targets.ContainsKey($targetName)) {
+		$target = $targets[$targetName]
 		if ($target.StartsWith('http://') -or $target.StartsWith('https://')) {
 			return $False
 		}
