@@ -1,5 +1,5 @@
 if (Test-Path Function:\TabExpansion) {
-	Rename-Item Function:\TabExpansion Function:\PsShortcuts-TabExpansionBackup
+	Rename-Item Function:\TabExpansion PsShortcuts-TabExpansionBackup
 }
 
 
