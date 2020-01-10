@@ -18,7 +18,7 @@ function getSuggestions($destinations, $lastWord) {
 
 
 function TabExpansion($line, $lastWord) {
-	$aliases = @('go') + @(get-alias | where { $_.Definition -eq 'go' } | select -Exp Name)
+	$aliases = @('Goto-Target') + @(get-alias | where { $_.Definition -eq 'Goto-Target' } | select -Exp Name)
 	$lastBlock = [regex]::Split($line, '[|;]')[-1].TrimStart()
 	if ($aliases | where { $lastBlock.StartsWith($_ + ' ') }) {
 		$destinations = [regex]::Split($lastBlock, '\s+')
