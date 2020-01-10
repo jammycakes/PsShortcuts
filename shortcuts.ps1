@@ -1,4 +1,4 @@
-function Get-AllGoTargetDescriptorsForLocation($location) {
+function Get-LocalGoTargetDescriptorsForLocation($location) {
 	$thisdir = $location
 	$dirs = @()
 	while ($thisdir -and ($thisdir -ne '')) {
@@ -8,6 +8,12 @@ function Get-AllGoTargetDescriptorsForLocation($location) {
 		}
 		$thisdir = Split-Path -parent $thisdir
 	}
+	return $dirs
+}
+
+function Get-AllGoTargetDescriptorsForLocation($location) {
+	$dirs = @(Get-LocalGoTargetDescriptorsForLocation $location)
+
 	$local = Get-UserGoTargetDescriptor
 	$system = Get-SystemGoTargetDescriptor
 	$installed = Get-InstalledGoTargetDescriptor
@@ -121,5 +127,82 @@ function Goto-Target {
 	}
 	else {
 		$args | foreach -process { Goto-SingleTarget $_ }
+	}
+}
+
+function Update-Descriptor {
+	param (
+		[string]$Name,
+		[string]$Descriptor,
+		[string]$Target
+	)
+
+	if (Test-Path $Descriptor) {
+		$content = Get-Content $Descriptor
+		Clear-Content $Descriptor
+	}
+	else {
+		$content = @('')
+	}
+	
+	$count = 0
+	$content | foreach {
+		$line = $_
+		if (-not $line.StartsWith("#")) {
+			$bits = $line -split '=',2
+			if ($bits.length -eq 2) {
+				$key = $bits[0].Trim().ToLower()
+				if ($name.Trim().ToLower() -eq $key) {
+					$line = "$key=$Target"
+					$count++
+				}
+			}
+		}
+		echo $line >> $Descriptor
+	}
+	if ($count -eq 0) {
+		$key = $Name.Trim().ToLower()
+		echo "$key=$Target" >> $Descriptor
+	}
+}
+
+function Save-Target {
+	param (
+		[Parameter(Mandatory)][string]$Name,
+		[string[]]$Location,
+		[string]$Target,
+		[switch]$Global = $false,
+		[switch]$Local = $false,
+		[switch]$User = $false
+	)
+
+	# If any locations are specified, use them
+
+	$descriptors = @()
+	if ($Global) { $descriptors += @(Get-SystemGoTargetDescriptor) }
+	if ($User) { $descriptors += @(Get-UserGoTargetDescriptor) }
+	if ($Local) { $descriptors += @(Join-Path $(Get-Location) '.go') }
+	if ($Location) { $descriptors += $(Resolve-Path $Location).ToString() }
+
+	# Otherwise get the most local descriptor (recurse through directories, then go for user)
+
+	if ($descriptors.Length -eq 0) {
+		$descriptors = @(Get-LocalGoTargetDescriptorsForLocation $(Get-Location))[0..0]
+	}
+
+	if ($descriptors.Length -eq 0) {
+		$descriptors = @(Get-UserGoTargetDescriptor)
+	}
+
+	if (-not $Target) {
+		$Target = $(Resolve-Path $(Get-Location)).ToString()
+	}
+
+	$descriptors | foreach { 
+		$path = $_
+		if (-not $path.EndsWith('.go')) {
+			$path = Join-Path $path '.go'
+		}
+		Update-Descriptor -Name $Name -Descriptor $path -Target $Target
 	}
 }

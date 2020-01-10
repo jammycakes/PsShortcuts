@@ -16,6 +16,7 @@ Export-ModuleMember `
 		'Get-UserGoTargetDescriptor',
 		'List-GoTargets',
 		'Goto-Target',
+		'Save-Target',
 		'Explore-CurrentLocation'
 	) `
 	-Alias @(
