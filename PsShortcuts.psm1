@@ -8,6 +8,8 @@ Push-Location $PsScriptRoot
 Pop-Location
 
 Set-Alias go Goto-Target
+Set-Alias goto Goto-Target
+Set-Alias bookmark Save-Target
 Set-Alias here Explore-CurrentLocation
 
 Export-ModuleMember `
@@ -21,5 +23,7 @@ Export-ModuleMember `
 	) `
 	-Alias @(
 		'go',
+		'goto',
+		'bookmark',
 		'here'
 	)
