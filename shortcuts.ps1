@@ -134,7 +134,8 @@ function Update-Descriptor {
 	param (
 		[string]$Name,
 		[string]$Descriptor,
-		[string]$Target
+		[string]$Target,
+		[boolean]$Delete
 	)
 
 	if (Test-Path $Descriptor) {
@@ -144,7 +145,7 @@ function Update-Descriptor {
 	else {
 		$content = @('')
 	}
-	
+
 	$count = 0
 	$content | foreach {
 		$line = $_
@@ -153,14 +154,22 @@ function Update-Descriptor {
 			if ($bits.length -eq 2) {
 				$key = $bits[0].Trim().ToLower()
 				if ($name.Trim().ToLower() -eq $key) {
-					$line = "$key=$Target"
+					if ($Delete) {
+						$line = $false
+					}
+					else {
+						$line = "$key=$Target"
+					}
 					$count++
 				}
 			}
 		}
-		echo $line >> $Descriptor
+		if ($line -ne $false) {
+			echo $line >> $Descriptor
+		}
 	}
-	if ($count -eq 0) {
+
+	if (($count -eq 0) -and (-not $Delete)) {
 		$key = $Name.Trim().ToLower()
 		echo "$key=$Target" >> $Descriptor
 	}
@@ -173,7 +182,8 @@ function Save-Target {
 		[string]$Target,
 		[switch]$Global = $false,
 		[switch]$Local = $false,
-		[switch]$User = $false
+		[switch]$User = $false,
+		[switch]$Delete = $false
 	)
 
 	# If any locations are specified, use them
@@ -203,6 +213,6 @@ function Save-Target {
 		if (-not $path.EndsWith('.go')) {
 			$path = Join-Path $path '.go'
 		}
-		Update-Descriptor -Name $Name -Descriptor $path -Target $Target
+		Update-Descriptor -Name $Name -Descriptor $path -Target $Target -Delete $delete
 	}
 }
