@@ -165,13 +165,13 @@ function Update-Descriptor {
 			}
 		}
 		if ($line -ne $false) {
-			echo $line >> $Descriptor
+			echo $line | Add-Content -Path $Descriptor -Encoding UTF8
 		}
 	}
 
 	if (($count -eq 0) -and (-not $Delete)) {
 		$key = $Name.Trim().ToLower()
-		echo "$key=$Target" >> $Descriptor
+		echo "$key=$Target" | Add-Content -Path $Descriptor -Encoding UTF8
 	}
 }
 
