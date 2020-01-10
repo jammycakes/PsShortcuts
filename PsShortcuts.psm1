@@ -7,10 +7,18 @@ Push-Location $PsScriptRoot
 
 Pop-Location
 
+Set-Alias go Goto-Target
+Set-Alias here Explore-CurrentLocation
+
 Export-ModuleMember `
 	-Function @(
 		'TabExpansion',
 		'Get-UserGoTargetDescriptor',
+		'List-GoTargets',
+		'Goto-Target',
+		'Explore-CurrentLocation'
+	) `
+	-Alias @(
 		'go',
 		'here'
 	)

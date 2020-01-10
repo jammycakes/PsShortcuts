@@ -75,7 +75,7 @@ function Get-AllGoTargets {
 	return Get-AllGoTargetsForLocation $location
 }
 
-function Goto-Target($targetName) {
+function Goto-SingleTarget($targetName) {
 	$targets = Get-AllGoTargets
 	if ($targets.ContainsKey($targetName)) {
 		$target = $targets[$targetName]
@@ -105,23 +105,21 @@ function Get-Target($targetName, $location) {
 	return $False
 }
 
-function List-GoTargets {
+function List-Targets {
 	$targets = Get-AllGoTargets
 	$targets.GetEnumerator() | Sort-Object Name
 }
 
-# ====== Commands ====== #
-
-function go {
-	if ($args.Length -eq 0) {
-		List-GoTargets
-	}
-	else {
-		$args | foreach -process { Goto-Target $_ }
-	}
-}
-
-function here {
+function Explore-CurrentLocation {
 	$target = Convert-Path(Get-Location -PSProvider FileSystem)
 	Start-Process explorer "/e,$target"
+}
+
+function Goto-Target {
+	if ($args.Length -eq 0) {
+		List-Targets
+	}
+	else {
+		$args | foreach -process { Goto-SingleTarget $_ }
+	}
 }
