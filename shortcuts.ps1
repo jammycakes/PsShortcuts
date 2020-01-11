@@ -1,8 +1,10 @@
+$descriptorFileName = '.shortcuts'
+
 function Get-LocalGoTargetDescriptorsForLocation($location) {
 	$thisdir = $location
 	$dirs = @()
 	while ($thisdir -and ($thisdir -ne '')) {
-		$file = Join-Path $thisdir '.go'
+		$file = Join-Path $thisdir $descriptorFileName
 		if (Test-Path $file -PathType Leaf) {
 			$dirs += @($file)
 		}
@@ -35,17 +37,17 @@ function Get-AllGoTargetDescriptors {
 }
 
 function Get-UserGoTargetDescriptor {
-	return join-path (resolve-path ~) '.go'
+	return join-path (resolve-path ~) $descriptorFileName
 }
 
 function Get-SystemGoTargetDescriptor {
 	$common = [Environment]::GetFolderPath([Environment+SpecialFolder]::CommonApplicationData)
-	return join-path $common '.go'
+	return join-path $common $descriptorFileName
 }
 
 function Get-InstalledGoTargetDescriptor {
 	$thisdir = Split-Path -Parent $MyInvocation.ScriptName
-	return Join-Path $thisdir '.go'
+	return Join-Path $thisdir $descriptorFileName
 }
 
 function Get-AllGoTargetsForLocation($location) {
@@ -191,7 +193,7 @@ function Save-Target {
 	$descriptors = @()
 	if ($Global) { $descriptors += @(Get-SystemGoTargetDescriptor) }
 	if ($User) { $descriptors += @(Get-UserGoTargetDescriptor) }
-	if ($Local) { $descriptors += @(Join-Path $(Get-Location) '.go') }
+	if ($Local) { $descriptors += @(Join-Path $(Get-Location) $descriptorFileName) }
 	if ($Location) { $descriptors += $(Resolve-Path $Location).ToString() }
 
 	# Otherwise get the most local descriptor (recurse through directories, then go for user)
@@ -208,10 +210,10 @@ function Save-Target {
 		$Target = $(Resolve-Path $(Get-Location)).ToString()
 	}
 
-	$descriptors | foreach { 
+	$descriptors | foreach {
 		$path = $_
-		if (-not $path.EndsWith('.go')) {
-			$path = Join-Path $path '.go'
+		if (-not $path.EndsWith($descriptorFileName)) {
+			$path = Join-Path $path $descriptorFileName
 		}
 		Update-Descriptor -Name $Name -Descriptor $path -Target $Target -Delete $delete
 	}

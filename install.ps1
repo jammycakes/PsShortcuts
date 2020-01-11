@@ -30,7 +30,7 @@ function Get-FileEncoding($Path) {
     }
 }
 
-$profileLine = ". '$installDir\go.ps1'"
+$profileLine = ". '$installDir\load.ps1'"
 if(Select-String -Path $PROFILE -Pattern $profileLine -Quiet -SimpleMatch) {
     Write-Host "It seems PSShortcuts is already installed..."
     return
@@ -39,7 +39,7 @@ if(Select-String -Path $PROFILE -Pattern $profileLine -Quiet -SimpleMatch) {
 Write-Host "Adding PSShortcuts to profile..."
 @"
 
-# Load PSShortcuts 
+# Load PSShortcuts
 $profileLine
 
 "@ | Out-File $PROFILE -Append -WhatIf:$WhatIf -Encoding (Get-FileEncoding $PROFILE)
