@@ -13,14 +13,14 @@ function getSuggestions($destinations, $lastWord) {
 		}
 	}
 
-	(Get-AllGoTargetsForLocation $location).Keys | where { $_.ToLower().StartsWith($lastWord.ToLower()) } | sort
+	(Get-AllGoTargetsForLocation $location).Keys | Where-Object { $_.ToLower().StartsWith($lastWord.ToLower()) } | Sort-Object
 }
 
 
 function TabExpansion($line, $lastWord) {
-	$aliases = @('Goto-Target') + @(get-alias | where { $_.Definition -eq 'Goto-Target' } | select -Exp Name)
+	$aliases = @('Goto-Target') + @(get-alias | Where-Object { $_.Definition -eq 'Goto-Target' } | Select-Object -Exp Name)
 	$lastBlock = [regex]::Split($line, '[|;]')[-1].TrimStart()
-	if ($aliases | where { $lastBlock.StartsWith($_ + ' ') }) {
+	if ($aliases | Where-Object { $lastBlock.StartsWith($_ + ' ') }) {
 		$destinations = [regex]::Split($lastBlock, '\s+')
 		getSuggestions $destinations $lastWord
 	}

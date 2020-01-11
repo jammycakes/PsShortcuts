@@ -53,10 +53,10 @@ function Get-InstalledGoTargetDescriptor {
 function Get-AllGoTargetsForLocation($location) {
 	$targets = @{}
 
-	Get-AllGoTargetDescriptorsForLocation($location) | foreach -process {
+	Get-AllGoTargetDescriptorsForLocation($location) | ForEach-Object -process {
 		$dir = Split-Path -parent $_
 		$dir = [System.IO.Path]::GetFullPath($dir)
-		Get-Content $_ | foreach {
+		Get-Content $_ | ForEach-Object {
 			if (-not $_.StartsWith("#")) {
 				$bits = $_ -split '=',2
 				if ($bits.length -eq 2) {
@@ -149,7 +149,7 @@ function Update-Descriptor {
 	}
 
 	$count = 0
-	$content | foreach {
+	$content | ForEach-Object {
 		$line = $_
 		if (-not $line.StartsWith("#")) {
 			$bits = $line -split '=',2
@@ -167,13 +167,13 @@ function Update-Descriptor {
 			}
 		}
 		if ($line -ne $false) {
-			echo $line | Add-Content -Path $Descriptor -Encoding UTF8
+			Write-Output $line | Add-Content -Path $Descriptor -Encoding UTF8
 		}
 	}
 
 	if (($count -eq 0) -and (-not $Delete)) {
 		$key = $Name.Trim().ToLower()
-		echo "$key=$Target" | Add-Content -Path $Descriptor -Encoding UTF8
+		Write-Output "$key=$Target" | Add-Content -Path $Descriptor -Encoding UTF8
 	}
 }
 
@@ -210,7 +210,7 @@ function Save-Target {
 		$Target = $(Resolve-Path $(Get-Location)).ToString()
 	}
 
-	$descriptors | foreach {
+	$descriptors | ForEach-Object {
 		$path = $_
 		if (-not $path.EndsWith($descriptorFileName)) {
 			$path = Join-Path $path $descriptorFileName
