@@ -28,6 +28,7 @@ function Get-AllGoTargetDescriptorsForLocation($location) {
 	if ((Test-Path $installed -PathType Leaf) -and ($dirs -inotcontains @($installed))) {
 		$dirs += @($installed)
 	}
+
 	return $dirs
 }
 
