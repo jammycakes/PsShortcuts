@@ -1,0 +1,26 @@
+# Absolute path
+winetc = c:\windows\system32\drivers\etc
+
+# Relative path
+subdata = with spaces
+
+# Home directory
+home = ~
+
+# Nonexistent relative directory
+nonexistent-relative = does not exist
+
+# Nonexistent home directory
+nonexistent-home = ~/does not exist
+
+# Nonexistent relative with dot
+nonexistent-withdot = ./does not exist
+
+# Nonexistent relative with two dots
+nonexistent-withtwodots = ../does not exist
+
+# Commented out path
+# commented-out = c:\
+
+# common to more than one level
+common = outer
