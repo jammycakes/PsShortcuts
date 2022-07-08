@@ -113,3 +113,10 @@ Describe "Read-AllShortcuts" {
         $shortcuts["common"] | Should -Match 'inner$'
     }
 }
+
+Describe "Get-ShortcutLocation" {
+    It "Should resolve recursive shortcuts" {
+        $location = Get-ShortcutLocation subdata common -path "$PSScriptRoot\data"
+        $location | Should -Be "$PSScriptRoot\data\with spaces\inner"
+    }
+}

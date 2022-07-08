@@ -130,3 +130,27 @@ function Read-AllShortcuts {
 
     return $targets
 }
+
+function Get-ShortcutLocation {
+    param (
+        [Parameter(Position=$false)]
+        [string]
+        $path,
+        [Parameter(ValueFromRemainingArguments=$true)]
+        [string[]]
+        $targets
+    )
+
+    $location = $path
+
+    foreach ($target in $targets) {
+        $all = Read-AllShortcuts -path $location
+        $location = $all[$target]
+
+        if ($null -eq $location) {
+            return $null
+        }
+    }
+
+    return $location
+}
