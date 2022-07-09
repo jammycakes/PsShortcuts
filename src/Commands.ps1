@@ -1,4 +1,5 @@
 . $PSScriptRoot\Reader.ps1
+. $PSScriptRoot\Writer.ps1
 
 function Set-LocationToShortcut {
     param (
@@ -27,4 +28,21 @@ function Set-LocationToShortcut {
     }
 }
 
+function Set-PsShortcut {
+    param (
+        [Parameter(Mandatory=$true)][string] $Name,
+        [string] $Destination,
+        [string] $In,
+        [switch] $Delete
+    )
+
+    if ($Delete) {
+        Remove-PsShortcut -name $Name -location $In
+    }
+    else {
+        Write-PsShortcut -name $Name -location $In -destination $Destination
+    }
+}
+
 Set-Alias goto Set-LocationToShortcut
+Set-Alias mark Set-PsShortcut
