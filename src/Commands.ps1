@@ -30,17 +30,17 @@ function Set-LocationToShortcut {
 
 function Set-PsShortcut {
     param (
-        [Parameter(Mandatory=$true)][string] $Name,
+        [Parameter(Mandatory=$true)][string] $As,
         [string] $Destination,
         [string] $In,
         [switch] $Delete
     )
 
     if ($Delete) {
-        Remove-PsShortcut -name $Name -location $In
+        Remove-PsShortcut -name $As -location $In
     }
     else {
-        Write-PsShortcut -name $Name -location $In -destination $Destination
+        Write-PsShortcut -name $As -location $In -destination $Destination
     }
 }
 
