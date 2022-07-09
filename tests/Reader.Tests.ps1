@@ -119,4 +119,11 @@ Describe "Get-ShortcutLocation" {
         $location = Get-ShortcutLocation subdata common -path "$PSScriptRoot\data"
         $location | Should -Be "$PSScriptRoot\data\with spaces\inner"
     }
+
+    It "Should get the location when there are no targets" {
+        $location = "$PSScriptRoot\data\with spaces"
+        $targets = @()
+        $final = Get-ShortcutLocation -path $location -targets $targets
+        $final | Should -Be $location
+    }
 }
