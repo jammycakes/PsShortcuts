@@ -2,16 +2,15 @@
 
 function Set-LocationToShortcut {
     param (
-        [Parameter(Position=$False)]
-        [string]
-        $From = '',
-
-        [Parameter(ValueFromRemainingArguments=$true)]
+        [Parameter(ValueFromRemainingArguments=$true, Position=0)]
         [string[]]
-        $Targets
+        $Targets,
+
+        [string]
+        $From = ''
     )
 
-    if ($From -eq '') {
+    if (($From -eq '') -or ($null -eq $From)) {
         $path = Get-Location
     }
     else {

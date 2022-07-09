@@ -126,4 +126,9 @@ Describe "Get-ShortcutLocation" {
         $final = Get-ShortcutLocation -path $location -targets $targets
         $final | Should -Be $location
     }
+
+    It "Should resolve an absolute path" {
+        $location = Get-ShortcutLocation winetc -Path "$PSScriptRoot\data\with spaces"
+        $location | Should -Be "c:\windows\system32\drivers\etc"
+    }
 }
